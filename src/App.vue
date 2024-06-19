@@ -1,85 +1,75 @@
 <template>
-  <div id="app">
-    <Main>
-      <template v-slot:posts>
-        <Post />
-      </template>
-      <template v-slot:todos>
-        <Todos 
-          :tasks="tasks" 
-          @add-task="addTask" 
-          @update-task="updateTask" 
-          @delete-task="deleteTask" 
-          @complete-task="completeTask"
-        />
-      </template>
-    </Main>
-  </div>
+  <q-layout view="hHh lpR fFf">
+    <q-header class="header">
+      <q-toolbar>
+        <q-btn-group flat class="rout-nav">
+          <router-link to="/">
+            <q-btn flat :outline="!isActive('/')" label="Todos" />
+          </router-link>
+          <router-link to="/post">
+            <q-btn flat :outline="!isActive('/post')" label="Post" />
+          </router-link>
+          <router-link to="/albums">
+            <q-btn flat :outline="!isActive('/albums')" label="Albums" />
+          </router-link>
+        </q-btn-group>
+      </q-toolbar>
+    </q-header>
+
+    <q-page-container>
+      <q-page>
+        <router-view />
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
-import Main from './components/Main.vue';
-import Post from './components/Post.vue';
-import Todos from './components/Todos.vue';
+import { useRoute } from 'vue-router';
 
 export default {
-  name: 'App',
-  components: {
-    Main,
-    Post,
-    Todos
-  },
-  data() {
+  setup() {
+    const route = useRoute();
+    const isActive = (path) => route.path === path;
     return {
-      tasks: []
+      isActive
     };
-  },
-  methods: {
-    addTask(task) {
-      this.tasks.push(task);
-    },
-    updateTask(index) {
-      this.tasks[index].editing = false;
-    },
-    deleteTask(index) {
-      this.tasks.splice(index, 1);
-    },
-    completeTask(index) {
-      this.$set(this.tasks[index], 'completed', true);
-    }
   }
 };
 </script>
 
-<style>
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-  padding: 20px;
-}
-
-.container h1 {
-  color: #4CAF50; /* Set the text color to green */
-}
-
-.button-container {
+<style scoped>
+.header {
+  background-color: #008CBA !important;
+  color: #fff0f5 !important;
+  padding: 10px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
   display: flex;
-  justify-content:center;
+  justify-content: center; 
 }
 
-button {
-  background-color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  margin: 0 10px;
-  border-radius: 5px;
-  cursor: pointer;
+.rout-nav {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.rout-nav button {
+  color: #000000;
   font-size: 16px;
-  color: #000; /* Set the text color to black */
 }
 
-button:hover {
-  background-color: #f0f0f0;
+.rout-nav :hover {
+  color: whitesmoke;
+}
+
+.rout-nav a q-btn {
+  color: #ffc0cb;
+  font-size: 16px;
+}
+
+.rout-nav q-btn[flat][outline] {
+  border-color: #ffc0cb;
+  color: #ffc0cb;
 }
 </style>
